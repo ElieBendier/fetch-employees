@@ -1,33 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import DisplayEmployee from './components/DisplayEmployee';
+import React from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const sampleEmployee = {
+    gender: 'male',
+    name: {
+      first: 'Charlie',
+      last: 'Thompson',
+    },
+    location: {
+      street: {
+        number: 761,
+        name: 'Tay Street',
+      },
+      city: 'Timaru',
+      postcode: 76111,
+    },
+    email: 'charlie.thompson@example.com',
+    picture: {
+      medium: 'https://randomuser.me/api/portraits/med/men/40.jpg',
+    },
+  };
+
+  const getEmployee = () => {
+    // Send the request
+    axios
+      .get('https://randomuser.me/api?nat=en')
+      // Use this data to update the state
+      .then((response) => {
+        setEmployee(response.data.results[0]);
+      });
+  };
+
+  const [employee, setEmployee] = useState(sampleEmployee);
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <DisplayEmployee employee={employee} />
+      <button type="button" onClick={getEmployee}>Get employee</button>
     </>
   )
 }
